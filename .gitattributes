@@ -1,0 +1,71 @@
+# Local secrets / miner config (never commit)
+.env
+.env.*
+!.env.example
+
+# Virtual environments
+miner_env
+miner_env/
+.venv/
+.venv312/
+venv/
+env/
+ENV/
+
+# Trained model artifacts (serve locally; manifest hashes implementation_files)
+model/artifacts/
+
+# Model runtime / training caches (see model/.gitignore)
+model/data_cache
+model/artifacts_backups/
+model/*.log
+model/autopilot_history.jsonl
+model/__pycache__/
+model/**/*.pyc
+
+# Benchmark dumps and train logs
+hands_generator/evaluation_datas/
+logs/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+dist/
+build/
+.pytest_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
+
+# Weights & Biases / misc local outputs
+wandb/
+catboost_info/
+*.npz
+_san_cache_meta.json
+
+# === Model files: never commit trained weights/artifacts (absolute) ===
+*.pkl
+*.joblib
+*.joblib.bak
+*.pt
+*.pth
+*.ckpt
+*.h5
+*.hdf5
+*.onnx
+*.pb
+*.safetensors
+*.bin
+*.model
+*.prefinal_bak
+model/artifacts/
+model/artifacts_backups/
+models/

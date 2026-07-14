@@ -1,0 +1,45 @@
+# poker44-aquila — PUBLIC repo (deny-list). Published: the serving
+# implementation (ensemble class, feature views, inference, miner entrypoint),
+# the subnet framework, neurons/ and tests — everything a validator needs to
+# verify the manifest's implementation hashes. Withheld: trained model
+# weights/artifacts, the training/retrain/evaluation pipeline (know-how),
+# README/docs prose, and wallet secrets.
+
+# secrets — never pushed
+.env
+*.env
+!.env.example
+
+# trained model weights / artifacts (regenerated locally by the retrain pipeline)
+model/artifacts/
+model/artifacts_backups/
+model/artifacts_staging/
+model/data_cache
+train_data/
+*.pkl
+*.joblib
+*.pt
+*.bin
+
+# training / retrain / evaluation pipeline (withheld know-how)
+model/train_d0_ensemble.py
+model/train_final_v2.py
+model/bakeoff_v3.py
+model/dataset.py
+model/autopilot.py
+model/evaluate.py
+model/reward_fn.py
+
+# prose / descriptions are not published
+*.md
+docs/
+
+# local env / build / log noise
+miner_env
+.venv/
+*.log
+*.jsonl
+__pycache__/
+*.pyc
+catboost_info/
+wandb/
