@@ -29,10 +29,24 @@ def _parse_bool(value: str | None, *, default: bool = False) -> bool:
     return value.strip().lower() in {"1", "true", "yes", "y", "on"}
 
 
-def _sha256_for_files(paths: Iterable[Path]) -> str:
+def _sha256_for_files(paths: Iterable[Path], *, repo_root: Optional[Path] = None) -> str:
+    """Content digest of the given files, keyed by repo-relative path.
+
+    The per-file label is the path relative to repo_root in POSIX form so the
+    digest is reproducible from a fresh clone at the same commit, independent of
+    the absolute install location. Files outside repo_root fall back to their
+    basename. Callers must pass repo_root for the hash to be validator-verifiable.
+    """
+    root = repo_root.resolve() if repo_root is not None else None
+
+    def _label(path: Path) -> str:
+        if root is not None and path.is_relative_to(root):
+            return path.relative_to(root).as_posix()
+        return path.name
+
     digest = hashlib.sha256()
-    for path in sorted((p.resolve() for p in paths), key=lambda p: str(p)):
-        digest.update(str(path).encode("utf-8"))
+    for path in sorted((p.resolve() for p in paths), key=_label):
+        digest.update(_label(path).encode("utf-8"))
         with path.open("rb") as handle:
             while True:
                 chunk = handle.read(1024 * 1024)
@@ -50,7 +64,7 @@ def build_local_model_manifest(
 ) -> Dict[str, Any]:
     """Build a serializable manifest for the miner's current implementation."""
     implementation_paths = [path.resolve() for path in implementation_files]
-    implementation_sha256 = _sha256_for_files(implementation_paths)
+    implementation_sha256 = _sha256_for_files(implementation_paths, repo_root=repo_root.resolve())
     default_values = dict(defaults or {})
 
     manifest: Dict[str, Any] = {
